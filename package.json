@@ -1,0 +1,32 @@
+{
+  "name": "react-research-agent",
+  "version": "1.0.0",
+  "description": "User\r  ↓\r Agent\r  ↓\r LLM reasoning\r  ↓\r Agent executes tool\r  ↓\r Tool result\r  ↓\r LLM processes result\r  ↓\r Final answer\r  ↓\r User",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon --exec ts-node src/index.ts",
+    "start": "node src/index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "dependencies": {
+    "@langchain/core": "^1.1.32",
+    "@langchain/groq": "^1.1.5",
+    "@tavily/core": "^0.7.2",
+    "axios": "^1.13.6",
+    "cheerio": "^1.2.0",
+    "cors": "^2.8.6",
+    "dotenv": "^17.3.1",
+    "express": "^5.2.1",
+    "langchain": "^1.2.32",
+    "typescript": "^5.9.3"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.6",
+    "@types/node": "^25.5.0",
+    "nodemon": "^3.1.14",
+    "ts-node": "^10.9.2"
+  }
+}
