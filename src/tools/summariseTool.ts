@@ -1,5 +1,5 @@
 import * as z from "zod";
-import { llm } from "../llm/model";
+import { llm } from "../llm/model.ts";
 
 export const summariseTool = {
   name: "summarise",

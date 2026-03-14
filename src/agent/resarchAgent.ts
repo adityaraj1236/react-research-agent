@@ -1,10 +1,10 @@
 import {createAgent} from  "langchain"
-import { llm } from "../llm/model";
+import { llm } from "../llm/model.ts";
 import { create } from "node:domain";
-import { SYSTEM_PROMPT } from "../llm/prompt";
-import { searchTool } from "../tools/searchTool";
-import { summariseTool } from "../tools/summariseTool";
-import { fetchTool } from "../tools/fetchTool";
+import { SYSTEM_PROMPT } from "../llm/prompt.js";
+import { searchTool } from "../tools/searchTool.ts";
+import { summariseTool } from "../tools/summariseTool.ts";
+import { fetchTool } from "../tools/fetchTool.ts";
 
 const agent  = createAgent({
     model:  llm,
