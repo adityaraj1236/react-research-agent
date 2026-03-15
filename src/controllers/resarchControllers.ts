@@ -1,10 +1,20 @@
 import agent from "../agent/resarchAgent.ts";
 import { fetchTool } from "../tools/fetchTool.ts";
 import { summariseTool } from "../tools/summariseTool.ts";
+import { embeddingModel } from "../llm/embedding.ts";
+import { searchCache, storeCache } from "../db/cache.ts";
 
 export const resarchController = async (req: any, res: any) => {
   try {
     const { query } = req.body;
+    const embedding = await embeddingModel.embedQuery(query);
+
+const cached = await searchCache(embedding);
+
+if (cached) {
+  console.log(" Cache hit");
+  return res.json(cached);
+}
 
     const response = await agent.invoke({
       messages: [
@@ -53,6 +63,12 @@ export const resarchController = async (req: any, res: any) => {
 
     const summary = await summariseTool.func({
       text: combinedText
+    });
+
+    await storeCache(query, embedding, {
+      summary,
+      sources: urls,
+      searchResults
     });
 
     res.json({

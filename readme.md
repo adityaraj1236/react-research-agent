@@ -175,3 +175,28 @@ Planner → steps decide karta hai
 Executor → steps run karta hai
 
 Yeh structured workflow hota hai.
+
+
+
+              Final Architecture
+                ┌───────────────┐
+                │     User      │
+                └──────┬────────┘
+                       ↓
+                Query Embedding
+                       ↓
+              Redis Vector Search
+               /              \
+         Cache Hit         Cache Miss
+            ↓                  ↓
+     Return Cached        Search Tool
+        Answer                ↓
+                          Fetch Tool
+                               ↓
+                          Clean Text
+                               ↓
+                          Groq LLM
+                               ↓
+                        Store in Redis
+                               ↓
+                           Response
