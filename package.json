@@ -13,6 +13,7 @@
   "type": "module",
   "dependencies": {
     "@langchain/core": "^1.1.32",
+    "@langchain/google-genai": "^2.1.25",
     "@langchain/groq": "^1.1.5",
     "@tavily/core": "^0.7.2",
     "axios": "^1.13.6",

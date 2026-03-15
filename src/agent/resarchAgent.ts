@@ -9,7 +9,7 @@ import { fetchTool } from "../tools/fetchTool.ts";
 const agent  = createAgent({
     model:  llm,
     tools: [searchTool , fetchTool , summariseTool],  
-    systemPrompt :SYSTEM_PROMPT
+    systemPrompt :SYSTEM_PROMPT,
 })
 
 export default agent;

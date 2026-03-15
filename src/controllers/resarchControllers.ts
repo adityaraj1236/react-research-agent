@@ -1,27 +1,71 @@
 import agent from "../agent/resarchAgent.ts";
-import { searchTool } from "../tools/searchTool.ts";
+import { fetchTool } from "../tools/fetchTool.ts";
+import { summariseTool } from "../tools/summariseTool.ts";
+
 export const resarchController = async (req: any, res: any) => {
-    try {
-        const { query } = req.body;
-        console.log("Received query:", query); // Debug log
-        //debug  log 
-          const results = await searchTool.func({
-      query: query
+  try {
+    const { query } = req.body;
+
+    const response = await agent.invoke({
+      messages: [
+        {
+          role: "user",
+          content: query
+        }
+      ]
     });
 
-    console.log("Search results:", results);
-        const response = await agent.invoke({ 
-            messages:[
-                {
-                    role: "user",
-                    content: query
-                }
-            ]
-         });
-        console.log("Agent response:", response); // Debug log
-        res.json({ response });
-    } catch (error: unknown) {
-        console.error("Error in resarchController:", error);
-        res.status(500).json({ error: error instanceof Error ? error.message : "Unknown error" });
+    const result = response.messages;
+    console.log("Agent response messages:", JSON.stringify(result));
+
+    const toolMessage = result.find(
+      (m: any) => m.constructor.name === "ToolMessage" && m.name === "search"
+    );
+
+    let searchResults: any[] = [];
+
+    if (toolMessage) {
+      searchResults = JSON.parse(toolMessage.content);
     }
+
+    console.log("Search Results:", searchResults);
+
+    
+
+    const urls = searchResults.slice(0,3).map((item: any) => item.url);
+
+    const fetchedPages: string[] = await Promise.all(
+  urls.map((url: string) => fetchTool.func({ url }))
+);
+
+    
+
+    const validPages = fetchedPages.filter((p) =>
+      p &&
+      !p.toLowerCase().includes("error fetching") &&
+      !p.toLowerCase().includes("couldn’t load") &&
+      p.trim().length > 200
+    );
+
+
+
+    const combinedText = validPages.join("\n\n").slice(0,12000);
+
+    const summary = await summariseTool.func({
+      text: combinedText
+    });
+
+    res.json({
+      summary,
+      sources: urls,
+      searchResults
+    });
+
+  } catch (error: unknown) {
+    console.error("Error in researchController:", error);
+
+    res.status(500).json({
+      error: error instanceof Error ? error.message : "Unknown error"
+    });
+  }
 };
