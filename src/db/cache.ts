@@ -26,9 +26,19 @@ export async function searchCache(embedding: number[]) {
   );
 
   if (results.total > 0) {
+
     const doc: any = results.documents[0];
-    return JSON.parse(doc.value.result);
+    const score = doc.value.score || doc.score;   // Redis score
+
+    console.log("Similarity score:", score);
+
+    // threshold check
+    if (score < 0.15) {
+      console.log("Cache hit");
+      return JSON.parse(doc.value.result);
+    }
   }
 
+  console.log("Cache miss");
   return null;
 }
