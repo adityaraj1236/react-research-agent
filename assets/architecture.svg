@@ -1,0 +1,272 @@
+<svg width="720" height="640" viewBox="0 0 720 640" xmlns="http://www.w3.org/2000/svg" font-family="'Segoe UI', Arial, sans-serif">
+  <defs>
+    <marker id="arrowGray" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M2 1L8 5L2 9" fill="none" stroke="#888" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
+    <marker id="arrowGreen" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M2 1L8 5L2 9" fill="none" stroke="#1D9E75" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
+    <marker id="arrowRed" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M2 1L8 5L2 9" fill="none" stroke="#D85A30" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
+    <marker id="arrowOrange" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M2 1L8 5L2 9" fill="none" stroke="#E07B30" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
+
+    <!-- Glow filters -->
+    <filter id="glowGreen" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="glowPurple" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+
+    <style>
+      /* Node entrance animations */
+      @keyframes fadeSlideIn {
+        from { opacity: 0; transform: translateY(-10px); }
+        to   { opacity: 1; transform: translateY(0); }
+      }
+      /* Pulse for Redis cache node */
+      @keyframes pulseBorder {
+        0%,100% { stroke-width: 1.5; stroke-opacity: 1; }
+        50%      { stroke-width: 3;   stroke-opacity: 0.6; }
+      }
+      /* Flowing dashed lines */
+      @keyframes dashFlow {
+        from { stroke-dashoffset: 24; }
+        to   { stroke-dashoffset: 0; }
+      }
+      /* Dot travelling along a path */
+      @keyframes travelDown {
+        0%   { transform: translateY(0px);   opacity: 0; }
+        10%  { opacity: 1; }
+        90%  { opacity: 1; }
+        100% { transform: translateY(50px);  opacity: 0; }
+      }
+      @keyframes travelLeft {
+        0%   { transform: translateX(0px);   opacity: 0; }
+        10%  { opacity: 1; }
+        90%  { opacity: 1; }
+        100% { transform: translateX(-90px); opacity: 0; }
+      }
+      @keyframes travelRight {
+        0%   { transform: translateX(0px);  opacity: 0; }
+        10%  { opacity: 1; }
+        90%  { opacity: 1; }
+        100% { transform: translateX(90px); opacity: 0; }
+      }
+      /* Badge flash */
+      @keyframes badgeFlash {
+        0%,100% { opacity: 1; }
+        50%      { opacity: 0.5; }
+      }
+      /* Pipeline step highlight */
+      @keyframes stepGlow {
+        0%,100% { fill-opacity: 1; }
+        50%      { fill-opacity: 0.75; }
+      }
+
+      /* Staggered node entries */
+      .n1  { animation: fadeSlideIn 0.5s ease 0.1s both; }
+      .n2  { animation: fadeSlideIn 0.5s ease 0.3s both; }
+      .n3  { animation: fadeSlideIn 0.5s ease 0.5s both; }
+      .n4  { animation: fadeSlideIn 0.5s ease 0.7s both; }
+      .n5  { animation: fadeSlideIn 0.5s ease 0.9s both; }
+      .n6  { animation: fadeSlideIn 0.5s ease 1.1s both; }
+      .n7  { animation: fadeSlideIn 0.5s ease 1.3s both; }
+      .n8  { animation: fadeSlideIn 0.5s ease 1.5s both; }
+      .n9  { animation: fadeSlideIn 0.5s ease 1.7s both; }
+      .n10 { animation: fadeSlideIn 0.5s ease 1.9s both; }
+
+      /* Redis border pulse */
+      .redis-border { animation: pulseBorder 2s ease-in-out infinite; }
+
+      /* Flowing arrows */
+      .flow-gray   { stroke-dasharray: 6 4; animation: dashFlow 1.2s linear infinite; }
+      .flow-green  { stroke-dasharray: 6 4; animation: dashFlow 1.0s linear infinite; }
+      .flow-red    { stroke-dasharray: 6 4; animation: dashFlow 1.0s linear infinite; }
+      .flow-orange { stroke-dasharray: 6 4; animation: dashFlow 1.3s linear infinite; }
+
+      /* Travelling dots */
+      .dot-down  { animation: travelDown  1.4s ease-in-out infinite; }
+      .dot-left  { animation: travelLeft  1.2s ease-in-out 0.3s infinite; }
+      .dot-right { animation: travelRight 1.2s ease-in-out 0.3s infinite; }
+
+      /* Pipeline steps glow */
+      .pipe-step { animation: stepGlow 2.5s ease-in-out infinite; }
+      .ps2 { animation-delay: 0.4s; }
+      .ps3 { animation-delay: 0.8s; }
+      .ps4 { animation-delay: 1.2s; }
+
+      /* Badge flash */
+      .badge-hit  { animation: badgeFlash 2s ease-in-out infinite; }
+      .badge-miss { animation: badgeFlash 2s ease-in-out 1s infinite; }
+    </style>
+  </defs>
+
+  <!-- ═══════════════════════════════════════════════ -->
+  <!--  BACKGROUND                                     -->
+  <!-- ═══════════════════════════════════════════════ -->
+  <rect width="720" height="640" fill="#0d1117" rx="12"/>
+
+  <!-- subtle grid -->
+  <g opacity="0.04" stroke="#fff" stroke-width="0.5">
+    <line x1="0" y1="80"  x2="720" y2="80"/>
+    <line x1="0" y1="160" x2="720" y2="160"/>
+    <line x1="0" y1="240" x2="720" y2="240"/>
+    <line x1="0" y1="320" x2="720" y2="320"/>
+    <line x1="0" y1="400" x2="720" y2="400"/>
+    <line x1="0" y1="480" x2="720" y2="480"/>
+    <line x1="0" y1="560" x2="720" y2="560"/>
+    <line x1="80"  y1="0" x2="80"  y2="640"/>
+    <line x1="160" y1="0" x2="160" y2="640"/>
+    <line x1="240" y1="0" x2="240" y2="640"/>
+    <line x1="360" y1="0" x2="360" y2="640"/>
+    <line x1="480" y1="0" x2="480" y2="640"/>
+    <line x1="600" y1="0" x2="600" y2="640"/>
+  </g>
+
+  <!-- ═══════════════════════════════════════════════ -->
+  <!--  TITLE                                          -->
+  <!-- ═══════════════════════════════════════════════ -->
+  <text x="360" y="30" text-anchor="middle" font-size="15" font-weight="700" fill="#e6edf3" letter-spacing="1">AI RESEARCH AGENT</text>
+  <text x="360" y="48" text-anchor="middle" font-size="10" fill="#8b949e" letter-spacing="2">ARCHITECTURE</text>
+
+  <!-- ═══════════════════════════════════════════════ -->
+  <!--  NODE 1 — USER QUERY                           -->
+  <!-- ═══════════════════════════════════════════════ -->
+  <g class="n1">
+    <rect x="260" y="62" width="200" height="44" rx="8" fill="#161b22" stroke="#30363d" stroke-width="1"/>
+    <circle cx="284" cy="84" r="10" fill="#21262d" stroke="#30363d" stroke-width="1"/>
+    <text x="284" y="88" text-anchor="middle" font-size="12">👤</text>
+    <text x="370" y="88" text-anchor="middle" font-size="13" font-weight="600" fill="#e6edf3">User Query</text>
+  </g>
+
+  <!-- Arrow 1→2 + dot -->
+  <line x1="360" y1="106" x2="360" y2="136" stroke="#555" stroke-width="1.5" class="flow-gray" marker-end="url(#arrowGray)"/>
+  <circle cx="360" cy="110" r="3" fill="#8b949e" class="dot-down"/>
+
+  <!-- ═══════════════════════════════════════════════ -->
+  <!--  NODE 2 — EMBEDDING                            -->
+  <!-- ═══════════════════════════════════════════════ -->
+  <g class="n2">
+    <rect x="225" y="136" width="270" height="50" rx="8" fill="#1a1f2e" stroke="#3B3A8F" stroke-width="1"/>
+    <text x="360" y="157" text-anchor="middle" font-size="12" font-weight="600" fill="#a5b4fc">Query Embedding</text>
+    <text x="360" y="174" text-anchor="middle" font-size="10" fill="#6b7db3">Converts text → vector</text>
+  </g>
+
+  <!-- Arrow 2→3 + dot -->
+  <line x1="360" y1="186" x2="360" y2="216" stroke="#555" stroke-width="1.5" class="flow-gray" marker-end="url(#arrowGray)"/>
+  <circle cx="360" cy="190" r="3" fill="#8b949e" class="dot-down"/>
+
+  <!-- ═══════════════════════════════════════════════ -->
+  <!--  NODE 3 — REDIS CACHE (pulsing)                -->
+  <!-- ═══════════════════════════════════════════════ -->
+  <g class="n3">
+    <rect x="185" y="216" width="350" height="60" rx="10" fill="#0d2318" stroke="#1D9E75" stroke-width="1.5" class="redis-border" filter="url(#glowGreen)"/>
+    <text x="360" y="240" text-anchor="middle" font-size="13" font-weight="700" fill="#4ade80">⚡ Redis Vector Cache</text>
+    <text x="360" y="258" text-anchor="middle" font-size="10" fill="#6ee7b7">Semantic similarity search · Vector Store</text>
+    <!-- blinking dot indicator -->
+    <circle cx="508" cy="236" r="4" fill="#4ade80" opacity="0.9" class="badge-hit"/>
+  </g>
+
+  <!-- ═══════════════════════════════════════════════ -->
+  <!--  BRANCH LABELS                                  -->
+  <!-- ═══════════════════════════════════════════════ -->
+  <!-- HIT label -->
+  <rect x="118" y="288" width="76" height="20" rx="4" fill="#0d2318" class="badge-hit"/>
+  <text x="156" y="301" text-anchor="middle" font-size="10" font-weight="700" fill="#4ade80">✅ Cache Hit</text>
+
+  <!-- MISS label -->
+  <rect x="522" y="288" width="84" height="20" rx="4" fill="#2a1209" class="badge-miss"/>
+  <text x="564" y="301" text-anchor="middle" font-size="10" font-weight="700" fill="#f97316">❌ Cache Miss</text>
+
+  <!-- Arrow: Cache → HIT (left diagonal) -->
+  <path d="M250 276 L175 310" stroke="#1D9E75" stroke-width="1.5" fill="none" class="flow-green" marker-end="url(#arrowGreen)"/>
+
+  <!-- Arrow: Cache → MISS (right diagonal) -->
+  <path d="M470 276 L545 310" stroke="#D85A30" stroke-width="1.5" fill="none" class="flow-red" marker-end="url(#arrowRed)"/>
+
+  <!-- ═══════════════════════════════════════════════ -->
+  <!--  LEFT BRANCH — CACHE HIT                       -->
+  <!-- ═══════════════════════════════════════════════ -->
+  <g class="n4">
+    <rect x="60" y="310" width="200" height="56" rx="8" fill="#0d2318" stroke="#1D9E75" stroke-width="1"/>
+    <text x="160" y="333" text-anchor="middle" font-size="12" font-weight="600" fill="#4ade80">Cached Response</text>
+    <text x="160" y="350" text-anchor="middle" font-size="10" fill="#6ee7b7">Instant · No LLM call</text>
+    <text x="160" y="362" text-anchor="middle" font-size="9" fill="#4ade80">⚡ ~5ms response time</text>
+  </g>
+
+  <!-- Arrow: HIT → final response -->
+  <path d="M160 366 L160 520 L285 546" stroke="#1D9E75" stroke-width="1.5" fill="none" class="flow-green" marker-end="url(#arrowGreen)"/>
+
+  <!-- ═══════════════════════════════════════════════ -->
+  <!--  RIGHT BRANCH — RESEARCH PIPELINE              -->
+  <!-- ═══════════════════════════════════════════════ -->
+
+  <!-- Pipeline container -->
+  <rect x="450" y="310" width="220" height="230" rx="10" fill="#0d1117" stroke="#30363d" stroke-width="1" stroke-dasharray="5 3"/>
+  <text x="560" y="328" text-anchor="middle" font-size="9" fill="#8b949e" letter-spacing="1">RESEARCH PIPELINE</text>
+
+  <!-- Step 1: Search Tool -->
+  <g class="n5">
+    <rect x="468" y="334" width="184" height="40" rx="6" fill="#1c1a10" stroke="#d97706" stroke-width="1" class="pipe-step"/>
+    <text x="560" y="350" text-anchor="middle" font-size="11" font-weight="600" fill="#fbbf24">🔎 Search Tool</text>
+    <text x="560" y="365" text-anchor="middle" font-size="9" fill="#92400e">Finds relevant URLs</text>
+  </g>
+
+  <!-- Step arrow -->
+  <line x1="560" y1="374" x2="560" y2="390" stroke="#555" stroke-width="1" class="flow-orange" marker-end="url(#arrowOrange)"/>
+
+  <!-- Step 2: Fetch Tool -->
+  <g class="n6">
+    <rect x="468" y="390" width="184" height="40" rx="6" fill="#1c1a10" stroke="#d97706" stroke-width="1" class="pipe-step ps2"/>
+    <text x="560" y="406" text-anchor="middle" font-size="11" font-weight="600" fill="#fbbf24">📥 Fetch Tool</text>
+    <text x="560" y="421" text-anchor="middle" font-size="9" fill="#92400e">Scrapes &amp; cleans text</text>
+  </g>
+
+  <!-- Step arrow -->
+  <line x1="560" y1="430" x2="560" y2="446" stroke="#555" stroke-width="1" class="flow-orange" marker-end="url(#arrowOrange)"/>
+
+  <!-- Step 3: Groq LLM -->
+  <g class="n7">
+    <rect x="468" y="446" width="184" height="44" rx="6" fill="#1a1228" stroke="#7c3aed" stroke-width="1.5" class="pipe-step ps3" filter="url(#glowPurple)"/>
+    <text x="560" y="463" text-anchor="middle" font-size="11" font-weight="600" fill="#c4b5fd">🤖 Groq LLM</text>
+    <text x="560" y="479" text-anchor="middle" font-size="9" fill="#7c3aed">Summarizes content</text>
+  </g>
+
+  <!-- Step arrow -->
+  <line x1="560" y1="490" x2="560" y2="506" stroke="#555" stroke-width="1" class="flow-orange" marker-end="url(#arrowOrange)"/>
+
+  <!-- Step 4: Store in Redis -->
+  <g class="n8">
+    <rect x="468" y="506" width="184" height="28" rx="6" fill="#0d2318" stroke="#1D9E75" stroke-width="1" class="pipe-step ps4"/>
+    <text x="560" y="524" text-anchor="middle" font-size="11" font-weight="600" fill="#4ade80">💾 Store in Redis</text>
+  </g>
+
+  <!-- Arrow: pipeline → final response -->
+  <path d="M468 520 L435 546" stroke="#1D9E75" stroke-width="1.5" fill="none" class="flow-green" marker-end="url(#arrowGreen)"/>
+
+  <!-- ═══════════════════════════════════════════════ -->
+  <!--  NODE — FINAL RESPONSE                         -->
+  <!-- ═══════════════════════════════════════════════ -->
+  <g class="n9">
+    <rect x="245" y="540" width="230" height="50" rx="10" fill="#161b22" stroke="#30363d" stroke-width="1.5"/>
+    <text x="360" y="560" text-anchor="middle" font-size="13" font-weight="700" fill="#e6edf3">💬 Response to User</text>
+    <text x="360" y="578" text-anchor="middle" font-size="10" fill="#8b949e">Summarized · Cached for next time</text>
+  </g>
+
+  <!-- ═══════════════════════════════════════════════ -->
+  <!--  LEGEND                                         -->
+  <!-- ═══════════════════════════════════════════════ -->
+  <g class="n10">
+    <rect x="20" y="590" width="200" height="40" rx="6" fill="#161b22" stroke="#30363d" stroke-width="0.5"/>
+    <line x1="32" y1="604" x2="58" y2="604" stroke="#1D9E75" stroke-width="1.5" stroke-dasharray="4 3"/>
+    <text x="64" y="607" font-size="9" fill="#8b949e">Cache hit path</text>
+    <line x1="32" y1="620" x2="58" y2="620" stroke="#D85A30" stroke-width="1.5" stroke-dasharray="4 3"/>
+    <text x="64" y="623" font-size="9" fill="#8b949e">Research pipeline</text>
+  </g>
+</svg>

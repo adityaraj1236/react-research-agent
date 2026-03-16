@@ -1,202 +1,188 @@
-User
- ↓
-Agent
- ↓
-LLM reasoning
- ↓
-Agent executes tool
- ↓
-Tool result
- ↓
-LLM processes result
- ↓
-Final answer
- ↓
-User
+# 🔍 AI Research Agent
 
-| Component | Role                    |
-| --------- | ----------------------- |
-| User      | query deta hai          |
-| LLM       | reasoning karta hai     |
-| Agent     | tools execute karta hai |
+> An intelligent research agent that answers queries by searching the web, extracting relevant information, summarizing with an LLM — and avoiding repeated expensive calls using **semantic caching with Redis Vector Search**.
 
+---
 
-src
-│
-├── index.js
-│
-├── llm
-│   └── model.js
-│
-├── agent
-│   └── reactAgent.js
-│
-├── tools
-│   ├── searchTool.js
-│   ├── fetchTool.js
-│   └── summarizeTool.js
-│
-└── db
-    └── cache.js
+##  Features
 
+-  **Semantic caching** via Redis Vector Search — no duplicate LLM calls
+-  **Web search powered** research pipeline
+-  **Automatic content scraping** and cleaning
+-  **Groq LLM** summarization
+-  **Modular tool-based** architecture
+-  **Reduces latency and cost** for repeated or similar queries
 
-Requirements
-langchain
-groq-sdk
-express
-typescript
-mongoose
-mongodb
-axios
-cheerio
-dotenv
-cors
-zod
+---
 
+## 🏗️ System Architecture
 
-What to differentiate 
---smart caching not simple caching 
-Solution 1: Query Normalization (basic)
+ <img src="./assets/architecture.gif" width="720"/>
 
-System words ko normalize karta hai.
+##  How It Works
 
-Example:
+### 1. User Query
+The user sends a natural language query to the system.
 
-latest → recent
-recent → recent
+### 2. Query Embedding
+The query is converted into a vector embedding so semantic similarity can be computed.
 
-ya
+### 3. Semantic Cache Check (Redis Vector Search)
+The system first checks Redis to see if a similar query has already been processed.
 
-lowercase
-remove punctuation
-trim spaces
+| Result | Action |
+|--------|--------|
+|  Cache Hit | Stored response is returned **instantly** |
+|  Cache Miss | System continues through the research pipeline |
 
-Phir cache key banata hai.
+### 4. Search Tool
+The system searches the web to find relevant resources related to the user query.
 
-Example:
+### 5. Fetch Tool
+The content from the discovered links is fetched and scraped.
 
-latest AI research papers
-recent AI research papers
+### 6. Content Cleaning
+Raw scraped content is cleaned and structured for the LLM.
 
-normalize hone ke baad same ban sakte hain.
+### 7. Summarization (Groq LLM)
+The cleaned content is passed to Groq LLM, which generates a concise and informative summary.
 
-Lekin ye perfect solution nahi hai.
+### 8. Cache Storage
+The query embedding and the generated response are stored in Redis so future similar queries can be served instantly.
 
-Solution 2: Semantic Cache (AI systems me common)
+### 9. Final Response
+The summarized answer is returned to the user.
 
-Yahan system exact words nahi dekhta, meaning dekhta hai.
+---
 
-Process:
+##  Semantic Cache Strategy
 
-query
- ↓
-embedding vector
+The system uses vector similarity search to detect semantically similar queries.
 
-Example:
+**Example:**
 
-latest AI research papers
+| Query | Result |
+|-------|--------|
+| `Who is APJ Abdul Kalam?` |  Cache Miss → Full pipeline runs → Stored in Redis |
+| `Tell me about APJ Abdul Kalam` |  Cache Hit → Instant response from Redis |
 
-vector:
+A similarity threshold ensures unrelated queries do not collide.
 
-[0.21, -0.14, 0.66, ...]
+---
 
-Dusri query:
+##  Tech Stack
 
-recent AI research papers
+| Category | Technology |
+|----------|-----------|
+| **Backend** | Node.js, TypeScript |
+| **AI / LLM** | Groq LLM |
+| **Embeddings** | Embedding model (vector generation) |
+| **Data Layer** | Redis Stack, Redis Vector Search |
+| **Tools** | Web Search Tool, Fetch Tool, Summarization Tool |
 
-vector:
+---
 
-[0.20, -0.15, 0.64, ...]
+##  Project Structure
 
-Phir system cosine similarity check karta hai.
+```
+src/
+ ├── agent/
+ │    └── researchAgent.ts
+ │
+ ├── controllers/
+ │    └── researchControllers.ts
+ │
+ ├── db/
+ │    ├── cache.ts
+ │    ├── createIndex.ts
+ │    └── redisClient.ts
+ │
+ ├── llm/
+ │    ├── embedding.ts
+ │    └── model.ts
+ │
+ ├── tools/
+ │    ├── searchTool.ts
+ │    ├── fetchTool.ts
+ │    └── summariseTool.ts
+ │
+ └── routes/
+      └── researchRoutes.ts
+```
 
-Example:
+---
 
-similarity = 0.93
+##  Getting Started
 
-Agar threshold say:
+### Prerequisites
 
-> 0.9
+- Node.js v18+
+- Redis Stack running locally or via Docker
+- Groq API key
 
-toh system bolega:
+### Installation
 
-same intent
+```bash
+# Clone the repo
+git clone https://github.com/your-username/ai-research-agent.git
+cd ai-research-agent
 
-Aur cache use kar lega.
+# Install dependencies
+npm install
 
+# Set up environment variables
+cp .env.example .env
+# Add your GROQ_API_KEY and REDIS_URL
+```
 
-Ways of running Multi Agent System 
+### Running the Server
 
-Agents ko run kar sakte hain:
-        Sequential
-        Parallel
-        Conditional
-        Multi-agent collaboration
-        Graph workflows
+```bash
+npm run dev
+```
 
+---
 
-## Planner an Executor
+##  Example Flow
 
-User
-  │
-  ▼
-Planner Agent
-  │
-  ▼
-Task Plan
-  │
-  ▼
-Executor Agent
-  │
-  ├ search tool
-  ├ fetch tool
-  └ summarize tool
-  │
-  ▼
-Final Answer
+```
+Query: "Who is APJ Abdul Kalam?"
 
+First request:
+  Cache Miss → Web Search → Fetch Content → LLM Summary → Store in Redis → Response
 
-ReAct vs Planner Architecture
-ReAct Agent
+Second similar request ("Tell me about APJ Abdul Kalam"):
+  Cache Hit → Instant response from Redis ⚡
+```
 
-Ek hi agent sab karta hai:
+---
 
-Thought
-Action
-Observation
+## 💡 Why Semantic Caching Matters
 
-Agent step-by-step decide karta hai.
+LLM calls are expensive and slow. Semantic caching solves this by:
 
-Planner System
+-  **Reducing latency** — cached responses are instant
+-  **Reducing LLM costs** — no duplicate API calls
+-  **Improving scalability** — handles more queries without proportional cost growth
 
-Do agents hote hain:
+This architecture mirrors techniques used in modern AI search systems like Perplexity.
 
-Planner → steps decide karta hai
-Executor → steps run karta hai
+---
 
-Yeh structured workflow hota hai.
+## 🔮 Future Improvements
 
+- [ ] Streaming responses
+- [ ] Better semantic cache ranking
+- [ ] Multi-query retrieval
+- [ ] Source ranking and filtering
+- [ ] RAG integration with vector databases
 
+---
 
-              Final Architecture
-                ┌───────────────┐
-                │     User      │
-                └──────┬────────┘
-                       ↓
-                Query Embedding
-                       ↓
-              Redis Vector Search
-               /              \
-         Cache Hit         Cache Miss
-            ↓                  ↓
-     Return Cached        Search Tool
-        Answer                ↓
-                          Fetch Tool
-                               ↓
-                          Clean Text
-                               ↓
-                          Groq LLM
-                               ↓
-                        Store in Redis
-                               ↓
-                           Response
+## 👤 Author
+
+**Aditya Raj**
+
+---
+
+> ⭐ If you found this project useful, consider giving it a star!
