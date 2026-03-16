@@ -181,6 +181,9 @@ This architecture mirrors techniques used in modern AI search systems like Perpl
 
 ## 👤 Author
 
+## Personal Notes :
+  https://www.notion.so/Redis-FT-SEARCH-Vector-Search-Quick-Notes-325935fd4ae880f9b0bec26979bfa0b9?source=copy_link
+
 **Aditya Raj**
 
 ---

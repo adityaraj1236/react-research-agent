@@ -20,7 +20,7 @@ app.get("/", (req, res) => {
 
 app.use("/v1/api", resarchRoutes);
 
-async function startServer() {
+(async function startServer() {
   try {
     await connectRedis();
     console.log("✅ Redis connected");
@@ -34,6 +34,4 @@ async function startServer() {
   } catch (error) {
     console.error("❌ Failed to start server", error);
   }
-}
-
-startServer();
+})();
